@@ -1,0 +1,7 @@
+/* thêm code php trong snippets */
+
+function wc_ajax_variation_threshold_modify( $threshold, $product ){
+  $threshold = '1111';
+  return  $threshold;
+ }
+add_filter( 'woocommerce_ajax_variation_threshold','wc_ajax_variation_threshold_modify', 10, 2 );
