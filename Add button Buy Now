@@ -1,0 +1,74 @@
+/* add code php vào snippets */
+add_action('woocommerce_after_add_to_cart_button','devvn_quickbuy_after_addtocart_button');
+function devvn_quickbuy_after_addtocart_button(){
+    global $product;
+    ?>
+    <button type="button" class="button buy_now_button">
+        <?php _e('Buy Now', 'devvn'); ?>
+    </button>
+    <input type="hidden" name="is_buy_now" class="is_buy_now" value="0" autocomplete="off"/>
+     <?php dynamic_sidebar('block-action-down-cart'); ?>
+    <script>
+        jQuery(document).ready(function(){
+            jQuery('body').on('click', '.buy_now_button', function(){
+                var thisParent = jQuery(this).parents('form.cart');
+                if(jQuery('.single_add_to_cart_button', thisParent).hasClass('disabled')) return false;
+                thisParent.addClass('devvn-quickbuy');
+                jQuery('.is_buy_now', thisParent).val('1');
+                jQuery('.single_add_to_cart_button', thisParent).trigger('click');
+            });
+        });
+    </script>
+    <?php
+}
+add_filter('woocommerce_add_to_cart_redirect', 'redirect_to_checkout');
+function redirect_to_checkout($redirect_url) {
+    if (isset($_REQUEST['is_buy_now']) && $_REQUEST['is_buy_now']) {
+        $redirect_url = wc_get_checkout_url();
+    }
+    return $redirect_url;
+}
+
+
+/* CSS button Buy Now */
+
+.woocommerce-variation-add-to-cart {
+	display: flex;
+	flex-wrap: wrap;
+}
+.woocommerce-variation-add-to-cart > div, .woocommerce-variation-add-to-cart > button {
+	margin: 5px !important;
+	max-height: 40px;
+}
+.woocommerce-variation-add-to-cart > button {
+	flex-grow: 1;
+	border-radius: 4px;
+}
+button.buy_now_button {
+	position: relative;
+	background: transparent !important;
+	color: var(--primary-color);
+	padding: 0px 40px;
+	min-height: 40px;
+	border: none;
+	border-radius: 4px;
+	border: 1px solid var(--primary-color);
+}
+button.buy_now_button:hover {
+	color: #fff;
+	box-shadow: 0px 0px 0px transparent !important;
+	background: var(--primary-color) !important;
+}
+.quantity+.button {
+	border-radius: 4px !important;
+    border: none;
+}
+.woocommerce-variation-price {
+	padding: 10px 0px;
+}
+.single-product .product-main .button.loading {
+	color: #fff;
+}
+.single-product .product-main .button.loading:after {
+	display: none;
+}
